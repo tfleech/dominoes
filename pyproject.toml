@@ -6,6 +6,7 @@ authors = ["tfleech <tfsleech@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pre-commit = "^2.16.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
@@ -19,4 +20,3 @@ mypy = "^0.920"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
