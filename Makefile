@@ -55,7 +55,7 @@ lint:
 	poetry run mypy --install-types --non-interactive $(PYTHON_FILES)
 
 coverage:
-	poetry run coverage run -m pytest \
+	poetry run coverage run -m pytest tests \
 	&& poetry run coverage report -m
 
 start:

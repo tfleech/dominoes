@@ -1,5 +1,5 @@
-from domino import DominoOrientation
-from graphics import *
+from dominoes.domino import DominoOrientation
+from dominoes.graphics import *
 
 board = DominoBoardGraphic(2)
 

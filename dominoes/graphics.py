@@ -100,10 +100,11 @@ class DominoBoardGraphic:
     def __init__(self, board_size):
         self.full_board = []
         self.board_size = board_size
-        self.x_min = None
-        self.x_max = None
-        self.y_min = None
-        self.y_max = None
+        self.board_is_empty = True
+        self.x_min = 0
+        self.x_max = 0
+        self.y_min = 0
+        self.y_max = 0
 
         self.init_board()
 
@@ -128,8 +129,10 @@ class DominoBoardGraphic:
         self.full_board[y][x] = domino_graphic
         self.update_min_max(x, y)
 
+        self.board_is_empty = False
+
     def update_min_max(self, new_x, new_y):
-        if self.x_min is None:
+        if self.board_is_empty:
             self.x_min = new_x
             self.x_max = new_x
             self.y_min = new_y
