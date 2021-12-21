@@ -67,7 +67,9 @@ class GameOnePlayer:
         # self.player_hand = self.domino_set.draw_fixed_hand([18, 21, 26, 20, 19, 23, 24])
 
     def check_valid_moves(self):
-        board_playable_values = [endpoint.get_playable_value() for endpoint in self.board.endpoints]
+        board_playable_values = [
+            endpoint.get_playable_value() for endpoint in self.board.endpoints
+        ]
         hand_playable_values = self.player_hand.get_playable_values()
         for i in board_playable_values:
             for j in hand_playable_values:
@@ -99,18 +101,27 @@ class GameOnePlayer:
             selected_domino = int(input("What domino do you want to play next? "))
             selected_domino = self.player_hand.get_domino_by_index(selected_domino)
             selected_endpoint = int(input("Where do you want to play it? "))
-            selected_endpoint = self.board.endpoints[selected_endpoint]
+            selected_endpoint = list(self.board.endpoints)[selected_endpoint]
 
             if isinstance(selected_domino, DoubleDomino):
                 attachpoint = selected_domino.mid_side1
-                if attachpoint.get_playable_value() != selected_endpoint.get_playable_value():
+                if (
+                    attachpoint.get_playable_value()
+                    != selected_endpoint.get_playable_value()
+                ):
                     print("Not a valid move, please try again")
                     print("")
                     continue
             elif isinstance(selected_domino, NormalDomino):
-                if selected_domino.side1.value == selected_endpoint.get_playable_value():
+                if (
+                    selected_domino.side1.value
+                    == selected_endpoint.get_playable_value()
+                ):
                     attachpoint = selected_domino.side1
-                elif selected_domino.side2.value == selected_endpoint.get_playable_value():
+                elif (
+                    selected_domino.side2.value
+                    == selected_endpoint.get_playable_value()
+                ):
                     attachpoint = selected_domino.side2
                 else:
                     print("Not a valid move, please try again")

@@ -35,11 +35,7 @@ class EmptyGraphic(Graphic):
         #       "|   |\n" \
         #       "|   |\n" \
         #       "-----"
-        return "     \n" \
-               "     \n" \
-               "     \n" \
-               "     \n" \
-               "     \n"
+        return "     \n" "     \n" "     \n" "     \n" "     \n"
 
 
 class DominoGraphic(Graphic):
@@ -55,29 +51,37 @@ class DominoGraphic(Graphic):
         if not orientation:
             orientation = self.orientation
         if orientation == DominoOrientation.Side1Left:
-            return "     \n" \
-                   "-----\n" \
-                   "|{}|{}|\n" \
-                   "-----\n" \
-                   "     \n".format(self.val1, self.val2)
+            return (
+                "     \n"
+                "-----\n"
+                "|{}|{}|\n"
+                "-----\n"
+                "     \n".format(self.val1, self.val2)
+            )
         elif orientation == DominoOrientation.Side1Up:
-            return " --- \n" \
-                   " |{}| \n" \
-                   " |-| \n" \
-                   " |{}| \n" \
-                   " --- \n".format(self.val1, self.val2)
+            return (
+                " --- \n"
+                " |{}| \n"
+                " |-| \n"
+                " |{}| \n"
+                " --- \n".format(self.val1, self.val2)
+            )
         elif orientation == DominoOrientation.Side1Right:
-            return "     \n" \
-                   "-----\n" \
-                   "|{}|{}|\n" \
-                   "-----\n" \
-                   "     \n".format(self.val2, self.val1)
+            return (
+                "     \n"
+                "-----\n"
+                "|{}|{}|\n"
+                "-----\n"
+                "     \n".format(self.val2, self.val1)
+            )
         elif orientation == DominoOrientation.Side1Down:
-            return " --- \n" \
-                   " |{}| \n" \
-                   " |-| \n" \
-                   " |{}| \n" \
-                   " --- \n".format(self.val2, self.val1)
+            return (
+                " --- \n"
+                " |{}| \n"
+                " |-| \n"
+                " |{}| \n"
+                " --- \n".format(self.val2, self.val1)
+            )
 
 
 class HandGraphic:
@@ -87,13 +91,18 @@ class HandGraphic:
     def draw_hand(self):
         domino_graphics = [domino.graphic for domino in self.dominoes]
         for j in range(DOMINO_GRID_SIZE):
-            j_row = [graphic.draw_graphic(orientation=DominoOrientation.Side1Up).split('\n')[j] for graphic in domino_graphics]
-            print(''.join(j_row))
-        print('')
+            j_row = [
+                graphic.draw_graphic(orientation=DominoOrientation.Side1Up).split("\n")[
+                    j
+                ]
+                for graphic in domino_graphics
+            ]
+            print("".join(j_row))
+        print("")
 
         domino_numbers = list(range(len(self.dominoes)))
         domino_numbers = ["  {}  ".format(num) for num in domino_numbers]
-        print(''.join(domino_numbers))
+        print("".join(domino_numbers))
 
 
 class DominoBoardGraphic:
@@ -117,10 +126,10 @@ class DominoBoardGraphic:
 
     def draw_board(self):
         for i in range(self.y_max, self.y_min - 1, -1):
-            row = self.full_board[i][self.x_min:self.x_max + 1]
+            row = self.full_board[i][self.x_min : self.x_max + 1]
             for j in range(DOMINO_GRID_SIZE):
-                j_row = [graphic.draw_graphic().split('\n')[j] for graphic in row]
-                print(''.join(j_row))
+                j_row = [graphic.draw_graphic().split("\n")[j] for graphic in row]
+                print("".join(j_row))
 
     def add_domino(self, domino_graphic):
         x = domino_graphic.x_position

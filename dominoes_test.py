@@ -1,4 +1,4 @@
-from dominoes.game import *
+from dominoes.game import DominoBoard, DominoSet
 
 domino_set = DominoSet(max_number=4)
 
