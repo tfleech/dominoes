@@ -124,11 +124,6 @@ class Domino:
         return diff
 
 
-class NormalDomino(Domino):
-    def __init__(self, side1, side2):
-        super().__init__(side1, side2)
-
-
 class DoubleDomino(Domino):
     def __init__(self, side):
         super().__init__(side, side)

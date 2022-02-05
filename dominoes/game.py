@@ -1,7 +1,7 @@
-from random import sample
+from random import randint, sample
 
-from .domino import DominoBoard, DoubleDomino, NormalDomino
-from .graphics import HandGraphic
+from .domino import Domino, DominoBoard, DoubleDomino
+from .player import Hand, Player
 
 
 class DominoSet:
@@ -12,7 +12,7 @@ class DominoSet:
                 if i == j:
                     self.dominoes.append(DoubleDomino(i))
                 else:
-                    self.dominoes.append(NormalDomino(i, j))
+                    self.dominoes.append(Domino(i, j))
 
     def draw_hand(self, hand_size):
         selected_dominoes = sample(self.dominoes, hand_size)
@@ -34,29 +34,72 @@ class DominoSet:
         return Hand(selected_dominoes)
 
 
-class Hand:
-    def __init__(self, dominoes):
-        self.dominoes = dominoes
-        self.hand_graphic = HandGraphic(dominoes)
+class GameTwoPlayer:
+    def __init__(self, player1: Player, player2: Player):
+        self.domino_set = DominoSet()
+        self.board = DominoBoard()
+        self.players = [player1, player2]
+        self.turn = randint(0, 1)
 
-    def get_playable_values(self):
-        playable_values = []
-        for domino in self.dominoes:
-            if isinstance(domino, DoubleDomino):
-                playable_values.append(domino.mid_side1.get_playable_value())
-            else:
-                playable_values.append(domino.side1.value)
-                playable_values.append(domino.side2.value)
-        return playable_values
+        # TODO: make configurable
+        self.show_hands = [True, True]
 
-    def get_domino_by_index(self, domino_index):
-        return self.dominoes[domino_index]
+        for player in self.players:
+            player.draw_new_hand(self.domino_set.draw_hand(7))
 
-    def remove_domino(self, domino):
-        self.dominoes.remove(domino)
+    def bone_pile(self, player: Player):
+        while len(player.get_possible_moves(self.board)) == 0:
+            if len(self.domino_set.dominoes) == 0:
+                return
+            new_domino = self.domino_set.draw_single()
+            player.hand.add_domino(new_domino)
 
-    def add_domino(self, domino):
-        self.dominoes.append(domino)
+    def print_scores(self):
+        for player in self.players:
+            print("{}: {}".format(player.name, player.score))
+
+    def play(self):
+
+        while True:
+            turn_player = self.players[self.turn]
+            if self.show_hands[self.turn]:
+                print(turn_player.name)
+                turn_player.hand.hand_graphic.draw_hand()
+            # import pdb; pdb.set_trace()
+
+            if len(turn_player.get_possible_moves(self.board)) == 0:
+                self.bone_pile(turn_player)
+                if self.show_hands[self.turn]:
+                    turn_player.hand.hand_graphic.draw_hand()
+
+            move = turn_player.choose_next_move(self.board)
+            self.board.add_domino(
+                move.domino_to_play, move.side_on_board, move.side_to_play
+            )
+            turn_player.hand.remove_domino(move.domino_to_play)
+
+            score = self.board.get_score()
+            if score % 5 == 0:
+                turn_player.score += score // 5
+
+            self.board.board_graphic.draw_board()
+            self.print_scores()
+
+            if isinstance(move.domino_to_play, DoubleDomino) or score % 5 == 0:
+                continue
+
+            if len(turn_player.hand.dominoes) == 0:
+                leftover_points = max(
+                    sum([player.hand.get_total_value() for player in self.players])
+                    // 5,
+                    1,
+                )
+                turn_player.score += leftover_points
+                self.print_scores()
+                print("Game Over")
+                break
+
+            self.turn = (self.turn + 1) % len(self.players)
 
 
 class GameOnePlayer:
@@ -112,7 +155,7 @@ class GameOnePlayer:
                     print("Not a valid move, please try again")
                     print("")
                     continue
-            elif isinstance(selected_domino, NormalDomino):
+            elif isinstance(selected_domino, Domino):
                 if (
                     selected_domino.side1.value
                     == selected_endpoint.get_playable_value()
